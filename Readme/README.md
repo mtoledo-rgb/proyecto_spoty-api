@@ -5,6 +5,8 @@ _**Análisis de Popularidad de canciones en la era digital**_
 
 En el inicio de este proyecto de MusicStream nuestro objetivo era comprender las tendencias musicales de 2022-2023 y extraer conclusiones valiosas mediante el análisis de la popularidad de 4 géneros musicales en concreto: Pop, Hip Hop, Rock y Latino(urbano). 
 
+Hemos extraído dos años consecutivos para poder ver una tendencia en la evolución de los géneros (como next setps nos guatría poder abarcar más tiempo para sacar conclusiones más relevantes). 
+
 Hemos querido darle una capa más de análisis focalizándonos en  el papel de las mujeres en estos géneros que siempre han sido "típicamente masculinos". 
 
 Hemos mejorado la experiencia del usuario pudiendo extraer toda la información necesaria de cada una de las artistas mediante funciones en Python con el objetivo de mejorar la experiencia de las usuarias. 
