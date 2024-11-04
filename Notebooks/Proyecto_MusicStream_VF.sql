@@ -74,7 +74,8 @@ SELECT artista, MAX(listeners) AS max_listeners -- Hacemos un máx, porque quere
 SELECT Pais_origen, COUNT(DISTINCT artista) AS cantidad_artistas
 	FROM music_brainz
 	GROUP BY Pais_origen -- Agrupación por país de origen.
-	ORDER BY cantidad_artistas DESC; -- Orden descendente para obtener el país con más artistas.
+	ORDER BY cantidad_artistas DESC
+    LIMIT 1; -- Orden descendente para obtener el país con más artistas.
 
 -- 6. ¿Qué artista estuvo más tiempo en activo y cuántas canciones tiene en el rango extraído de información (2022-2023)?
 
@@ -105,7 +106,7 @@ SELECT
 FROM 
     last_fm lf
 INNER JOIN 
-    music_brainz mb ON lf.artista = mb.Artista
+    music_brainz AS mb ON lf.artista = mb.Artista
 WHERE 
     mb.Genero IN ('male', 'female')  -- Filtramos por géneros específicos
 GROUP BY 
