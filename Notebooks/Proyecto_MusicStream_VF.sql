@@ -88,7 +88,7 @@ SELECT mb.Artista,
        COUNT(s.nombre) AS cantidad_canciones -- Contamos las canciones o álbumes.
 FROM music_brainz AS mb
     LEFT JOIN spotipy AS s ON mb.Artista = s.artista 
-GROUP BY mb.Artista
+GROUP BY mb.Artista, tiempo_activo
 ORDER BY tiempo_activo DESC
 LIMIT 1;
 
@@ -107,7 +107,7 @@ FROM
 INNER JOIN 
     music_brainz mb ON lf.artista = mb.Artista
 WHERE 
-    mb.Genero IN ('Hombre', 'Mujer')  -- Filtramos por géneros específicos
+    mb.Genero IN ('male', 'female')  -- Filtramos por géneros específicos
 GROUP BY 
     mb.Genero;
 
@@ -117,7 +117,7 @@ SELECT lf.artista, SUM(playcount) AS total_reproducciones
 	FROM last_fm as lf
 INNER JOIN music_brainz as mb
          ON lf.artista = mb.Artista
-WHERE mb.genero = 'Mujer'
+WHERE mb.genero = 'female'
 GROUP BY lf.artista
 ORDER BY total_reproducciones DESC
 LIMIT 10;
@@ -130,8 +130,7 @@ INNER JOIN music_brainz as mb
     ON lf.artista = mb.Artista
 INNER JOIN SPOTIPY as s 
     ON lf.artista = s.artista
-WHERE mb.genero = 'Mujer'
+WHERE mb.genero = 'female'
 GROUP BY lf.genero_musica
 ORDER BY total_reproducciones DESC
 LIMIT 1;
-
