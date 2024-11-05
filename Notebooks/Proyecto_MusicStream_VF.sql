@@ -93,8 +93,7 @@ FROM (
         music_brainz AS mb
     WHERE mb.Fecha_fin_act = 'No Data'  -- Solo artistas en activo
         AND mb.Fecha_ini_act IS NOT NULL  -- Aseguramos que Fecha_ini_act tenga un valor
-        AND mb.Fecha_ini_act != ''  -- Aseguramos que Fecha_ini_act no esté vacío
-) AS artista_info
+        ) AS artista_info
 LEFT JOIN spotipy AS s ON artista_info.Artista = s.artista 
 GROUP BY artista_info.Artista, artista_info.tiempo_activo
 ORDER BY artista_info.tiempo_activo DESC 
