@@ -79,19 +79,26 @@ SELECT Pais_origen, COUNT(DISTINCT artista) AS cantidad_artistas
 
 -- 6. ¿Qué artista estuvo más tiempo en activo y cuántas canciones tiene en el rango extraído de información (2022-2023)?
 
-SELECT mb.Artista, 
-       (CASE 
-        WHEN mb.Fecha_fin_act IS NULL THEN 
-            YEAR(CURDATE()) - YEAR(mb.Fecha_ini_act)
-        ELSE 
-            YEAR(mb.Fecha_fin_act) - YEAR(mb.Fecha_ini_act)
-    END) AS tiempo_activo, -- usamos el year para extraer solo el año (y no un datetime). 
-       COUNT(s.nombre) AS cantidad_canciones -- Contamos las canciones o álbumes.
-FROM music_brainz AS mb
-    LEFT JOIN spotipy AS s ON mb.Artista = s.artista 
-GROUP BY mb.Artista, tiempo_activo
-ORDER BY tiempo_activo DESC
-LIMIT 1;
+-- Hacemos una subconsulta derivada, que actuará como tabla temporal en el FROM de nuestra consulta princial, para calcular el tiempo activo solo para artistas activos 
+-- Artistas activos =>(Fecha_fin_act = 'No Data'). Calculamos el tiempo de actividad hasta 31-12-23 puesto que no tenemos datos más alla de esa fecha*/
+
+SELECT artista_info.Artista,
+ FLOOR(artista_info.tiempo_activo), -- FLOOR para que nos devuelva años completos
+ COUNT(s.nombre) AS cantidad_canciones  -- Contamos las canciones asociadas al artista.
+FROM (
+    SELECT 
+        mb.Artista,
+        DATEDIFF('2023-12-31', STR_TO_DATE(mb.Fecha_ini_act, '%Y-%m-%d')) / 365.0 AS tiempo_activo  -- Calcula tiempo activo hasta el 31-12-2023
+    FROM 
+        music_brainz AS mb
+    WHERE mb.Fecha_fin_act = 'No Data'  -- Solo artistas en activo
+        AND mb.Fecha_ini_act IS NOT NULL  -- Aseguramos que Fecha_ini_act tenga un valor
+        AND mb.Fecha_ini_act != ''  -- Aseguramos que Fecha_ini_act no esté vacío
+) AS artista_info
+LEFT JOIN spotipy AS s ON artista_info.Artista = s.artista 
+GROUP BY artista_info.Artista, artista_info.tiempo_activo
+ORDER BY artista_info.tiempo_activo DESC 
+LIMIT 1;  -- Obtenemos el artista con más tiempo activo hasta 31-12-2023
 
 
 -- ---------------------------------------------------------------------------
